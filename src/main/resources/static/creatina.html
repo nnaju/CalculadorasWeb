@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Creatina</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>Calculadora de Creatina</h1>
+    <p>Descubra a quantidade ideal de creatina para o seu corpo</p>
+</header>
+
+<main>
+    <form id="form-creatina">
+        <label>Peso (kg): <input type="number" id="peso" required></label>
+        <button type="submit">Calcular</button>
+    </form>
+
+    <div id="resultado"></div>
+</main>
+
+<footer>
+    <button onclick="window.location.href='/home.html'">Voltar para Home</button>
+    &copy; 2023 Saúde e Bem-Estar. Todos os direitos reservados.
+</footer>
+
+<script>
+    document.getElementById('form-creatina').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const peso = parseFloat(document.getElementById('peso').value);
+
+        if (peso <= 0) {
+            alert("Por favor, insira um valor válido.");
+            return;
+        }
+
+        fetch('/api/calcular-creatina', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ peso })
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('resultado').innerHTML = `
+                    <p><strong>${data.tipo}:</strong> ${data.valor}</p>
+                    <p>${data.observacao}</p>
+                `;
+            })
+            .catch(error => console.error('Erro:', error));
+    });
+</script>
+</body>
+</html>
